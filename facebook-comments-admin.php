@@ -223,6 +223,13 @@ if (version_compare(phpversion(), FBCOMMENTS_REQUIRED_PHP_VER) == -1) {
 
 			<p><input type="checkbox" id="fbComments_noBox" name="fbComments[noBox]" value="1" <?php checked($fbc_options['noBox'], 1 ); ?> size="20">
 				<label for="fbComments_noBox"><?php _e(' Remove grey box surrounding Facebook comments'); ?></label></p>
+
+			<p><input type="checkbox" id="fbComments_hideClosed" name="fbComments[hideClosed]" value="1" <?php checked($fbc_options['hideClosed'], 1 ); ?> size="20">
+				<label for="fbComments_hideClosed"><?php _e('<em>*just added*</em> Hide &quot;Comments Closed&quot; message.'); ?>
+				</label>
+			</p>
+
+
 		</div>
 	</div>
 
