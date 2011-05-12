@@ -9,6 +9,7 @@
 
 		// Return out of function if commenting is closed for this post
 	    if (!comments_open()) {
+                if ($fbc_options['hideClosed'] != 1)
 			echo "<h2>Comments Closed</h2>";
 	    	return $comments;
 	    }
