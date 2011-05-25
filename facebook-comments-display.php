@@ -171,7 +171,8 @@
 		echo "
 	};
 
-	FB.Event.subscribe('comments.add', addedComment);
+	// Facebook has changed the event name
+	FB.Event.subscribe('comment.create', addedComment);
 </script>\n";
 	}
 
