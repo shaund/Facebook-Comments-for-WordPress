@@ -288,8 +288,14 @@
 					}
 			
 					// output comment and user
-					print '<li><a href="'.$user->link.'"><img src="https://graph.facebook.com/'.$user->id.'/picture" alt="'.$user->first_name . ' ' . $user->last_name .'" /></a><br />'."\n";
-					print '<strong><a href="'.$user->link.'">'.$user->first_name . ' ' . $user->last_name .'</a></strong>: '."\n";
+					print '<li>';
+					if (empty($user->link)) {
+						print '<img src="https://graph.facebook.com/'.$user->id.'/picture" alt="'.$user->first_name . ' ' . $user->last_name .'" /><br />'."\n";
+						print '<strong>'.$user->first_name . ' ' . $user->last_name .'</strong>: '."\n";
+					} else { 
+						print '<a href="'.$user->link.'"><img src="https://graph.facebook.com/'.$user->id.'/picture" alt="'.$user->first_name . ' ' . $user->last_name .'" /></a><br />'."\n";
+						print '<strong><a href="'.$user->link.'">'.$user->first_name . ' ' . $user->last_name .'</a></strong>: '."\n";
+					}
 					print '<p>'.make_clickable($comment->text).'</p>';
 					print '<span class="date">'.date("M j \a\\t g:ia", $comment->time).'</span>';
 			
@@ -311,8 +317,14 @@
 								$user = $users[$reply->fromid];
 							}
 							// output the replies
-							print '<li><a href="'.$user->link.'"><img src="https://graph.facebook.com/'.$user->id.'/picture" alt="'.$user->first_name . ' ' . $user->last_name .'" /></a><br />'."\n";
-							print '<strong><a href="'.$user->link.'">'.$user->first_name . ' ' . $user->last_name .'</a></strong>:'."\n";
+							print '<li>';
+							if (empty($user->link)) {
+								print '<img src="https://graph.facebook.com/'.$user->id.'/picture" alt="'.$user->first_name . ' ' . $user->last_name .'" /><br />'."\n";
+								print '<strong>'.$user->first_name . ' ' . $user->last_name .'</strong>: '."\n";
+							} else { 
+								print '<a href="'.$user->link.'"><img src="https://graph.facebook.com/'.$user->id.'/picture" alt="'.$user->first_name . ' ' . $user->last_name .'" /></a><br />'."\n";
+								print '<strong><a href="'.$user->link.'">'.$user->first_name . ' ' . $user->last_name .'</a></strong>: '."\n";
+							}
 							print '<p>'.make_clickable($reply->text).'</p>';
 							print '<span class="date">'.date("M j \a\\t g:ia", $reply->time).'</span>';
 							print '</li>'."\n\n";
