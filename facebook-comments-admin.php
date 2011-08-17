@@ -388,6 +388,10 @@ if (version_compare(phpversion(), FBCOMMENTS_REQUIRED_PHP_VER) == -1) {
 			<p><input type="checkbox" id="fbComments_includeOpenGraphMeta" name="fbComments[includeOpenGraphMeta]" value="1" <?php checked($fbc_options['includeOpenGraphMeta'], 1 ); ?> size="20">
 				<label for="fbComments_includeOpenGraphMeta"><?php _e(' Include OpenGraph meta information'); ?></label>
 				<em><?php _e(" (This will add the following meta information to the page &lt;head&gt; to assist with Like button clicks: post/page title, site name, current URL and content type)"); ?></em></p>
+				
+			<p><input type="checkbox" id="fbComments_includeHiddenSEOComments" name="fbComments[includeHiddenSEOComments]" value="1" <?php checked($fbc_options['includeHiddenSEOComments'], 1 ); ?> size="20">
+				<label for="fbComments_includeHiddenSEOComments"><?php _e(' Include Hidden SEO Comments'); ?></label>
+				<em><?php _e(" (This will add a SEO-friendly hidden box with the comments as recommended <a href=\"https://developers.facebook.com/docs/reference/plugins/comments/\" target=\"_blank\">here</a>.  It's highly recommended to only activate this setting when using some WordPress caching plugin to avoid excessive API calls.)"); ?></em></p>				
 		</div>
 	</div>
 
