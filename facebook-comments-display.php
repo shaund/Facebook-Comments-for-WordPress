@@ -53,7 +53,12 @@
 			// Print out the JavaScript that will catch new comments in order to update comment counts and send notifications
 			fbComments_printCommentCatchAndNotificationScripts($xid, $postTitle, $postUrl);
 
-        	echo "\n<div id='fbComments' style='{$fbc_options['containerCss']}'>\n";
+		if ($fbc_options['includeHiddenSEOComments'] == 1) {
+			// add special style info for hiding SEO comment box "behind" current box
+			echo "\n<div id='fbComments' style='position: relative; z-index: 0; {$fbc_options['containerCss']}'>\n";
+		} else { 
+        		echo "\n<div id='fbComments' style='{$fbc_options['containerCss']}'>\n";
+		}
 
         	if ($fbc_options['displayTitle']) {
         		echo "\t<p style='{$fbc_options['titleCss']}'>" . __($fbc_options['title']) . "</p>\n";
@@ -235,5 +240,94 @@
 				"url='$postUrl' ",
 				"notify='true'></fb:comments>";
 		}
-echo "</div>\n";
+		// Add the SEO comment box (if necessary)
+		fbc_facebook_seo_comments($xid);
+		echo "</div>\n";
 	}
+	
+	
+	/**
+	 * Outputs comments in a hidden, SEO friendly, container
+	 * 
+	 */
+	function fbc_facebook_seo_comments($xid) {
+		global $fbc_options;
+		
+		// check to see if we want to show hidden comments
+		if ($fbc_options['includeHiddenSEOComments'] == 1) {
+		
+			echo '<div style="display: block; position: absolute; left: 0; top: 0; z-index: -9; height: 1px; width: 1px; overflow: hidden; ">'."\n";
+	
+			// retrieve all top-level comments for this blog
+			$query = "select post_fbid, fromid, object_id, text, time, reply_xid from comment where xid='$xid'";
+			
+			// retrieve our comments
+			$query_url = "https://api.facebook.com/method/fql.query?format=json&query=".urlencode($query)."&access_token=".$fbc_options['accessToken'];
+			$content = file_get_contents($query_url);
+			
+			// decode JSON
+			$comments = json_decode($content);
+			
+			// hash array to avoid looking up same user multiple times
+			$users = array();
+			
+			// if we have comments start outputting them
+			if (!empty($comments)) {
+				print '<ul>'."\n";
+				// loop through each comment
+				foreach ($comments as $comment) {
+			
+					//avoid excessive user look ups by storing them in hash array
+					if (!isset($users[$comment->fromid])) {
+						// retrieve user
+						$user_url = "https://graph.facebook.com/".$comment->fromid;
+						$user = json_decode(file_get_contents($user_url));
+						$users[$comment->fromid] = $user;
+					} else {
+						$user = $users[$comment->fromid];
+					}
+			
+					// output comment and user
+					print '<li><a href="'.$user->link.'"><img src="https://graph.facebook.com/'.$user->id.'/picture" alt="'.$user->first_name . ' ' . $user->last_name .'" /></a><br />'."\n";
+					print '<strong><a href="'.$user->link.'">'.$user->first_name . ' ' . $user->last_name .'</a></strong>: '."\n";
+					print '<p>'.make_clickable($comment->text).'</p>';
+					print '<span class="date">'.date("M j \a\\t g:ia", $comment->time).'</span>';
+			
+					// check for replies
+					$reply_query = "select post_fbid, fromid, object_id, text, time, reply_xid from comment where object_id='$comment->post_fbid'";
+					$content = file_get_contents($query_url);
+					$replies = json_decode($content);
+					// if it has replies output them
+					if (!empty($replies)) {
+						print '<ul>';
+						// loop through each reply
+						foreach ( $replies as $reply ) {
+							//avoid excessive user look ups by storing them in hash array
+							if (!isset($users[$reply->fromid])) {
+								$user_url = "https://graph.facebook.com/".$reply->fromid;
+								$user = json_decode(file_get_contents($user_url));
+								$users[$reply->fromid] = $user;
+							} else {
+								$user = $users[$reply->fromid];
+							}
+							// output the replies
+							print '<li><a href="'.$user->link.'"><img src="https://graph.facebook.com/'.$user->id.'/picture" alt="'.$user->first_name . ' ' . $user->last_name .'" /></a><br />'."\n";
+							print '<strong><a href="'.$user->link.'">'.$user->first_name . ' ' . $user->last_name .'</a></strong>:'."\n";
+							print '<p>'.make_clickable($reply->text).'</p>';
+							print '<span class="date">'.date("M j \a\\t g:ia", $reply->time).'</span>';
+							print '</li>'."\n\n";
+						}
+						print '</ul>'."\n";
+					}
+			
+					print '</li>'."\n\n\n";
+				}
+				print '</ul>'."\n\n";
+			}
+			
+			echo '</div>'."\n";		
+		}
+	}	
+	
+	
+	
