@@ -88,9 +88,7 @@
 				if ($username == '1309634065') {	// if anon user
 					$username = '<span class="aname">$comments[$i][username]</span>';
 				} else {
-					$username = '<a target="_blank" href="https://www.facebook.com/profile.php?id='
-						. $username
-						.'">'. $users[$index]['name'] .'</a>';
+					$username = '<a target="_blank" href="https://www.facebook.com/profile.php?id=' . $username .'">'. $users[$index]['name'] .'</a>';
 				}
 
 				// make pretty
@@ -118,7 +116,7 @@
 					'<img alt="" src="'.$imgurl.'" class="avatar avatar-50 photo" height="50" width="50"/>'.
 					'<div class="dashboard-comment-wrap">'.
 						'<h4 class="comment-meta"> From '.
-							'<cite class="comment-author"><a href="https://www.facebook.com/profile.php?id='.$comments[$i]['fromid'].'">'.$username.'</a></cite> on '.
+							'<cite class="comment-author">'.$username.'</cite> on '.
 							'<a href="'.$commenturl.'">'.get_post($post_id)->post_title.'</a>
 							<abbr style="font-size:.8em" title="'.date('r',$comments[$i]['time']).'"> '.date('d M Y',$comments[$i]['time']).'</abbr>
 							<span class="approve">[Pending]</span>'.
@@ -206,9 +204,9 @@
 
 			$fb = fbComments_getFbApi();
 			/*
-			select post_id, fromid, time, text, post_fbid 
-			from comment 
-			where object_id 
+			select post_id, fromid, time, text, post_fbid
+			from comment
+			where object_id
 			in (select comments_fbid from link_stat where url="http://developers.facebook.com/blog/post/472")'
 			*/
 			$commentsq = "SELECT fromid, text, id, time, username, xid, object_id ".
@@ -220,7 +218,7 @@
 						 // "WHERE (xid IN (SELECT xid FROM comments_info WHERE app_id={$fbc_options['appId']})) ".
 						 // "OR object_id IN (SELECT comments_fbid FROM link_stat WHERE url='$commurl') ".
 						 // "ORDER BY time desc";
-			
+
 			// $commentsq = "SELECT post_id, fromid, time, text, post_fbid ".
 					  // 'FROM comment'.
 					  // "ORDER BY time desc";
@@ -234,7 +232,7 @@
 
 
 			$query = array("method"=>"fql.multiquery","queries"=>$query,'access_token'=>$atoken);
-			
+
 			$comments = $fb->api($query);
 
 			if ( ! $number = (int) $instance['number'] )
@@ -250,7 +248,7 @@
 			$parity = '';
 			$users = $comments[1]['fql_result_set'];
 			$comments = $comments[0]['fql_result_set'];
-			
+
 			$show_avatar = isset($instance['show_avatar']) ? $instance['show_avatar'] : true;
 
 			for ($i=0,$par=0;$i<$ncomms;$i++,$par++) {
@@ -262,7 +260,7 @@
 						break;
 					}
 				}
-				
+
 
 				// Comment meta
 				$username = $comments[$i]['fromid'];
@@ -306,7 +304,7 @@
 				$output .=
 				'<li class="fbc_rc_comment '.$parity.'">
 					<div class="fbc_rc_comment-meta">
-						<cite class="fbc_rc_comment-author"><a href="https://www.facebook.com/profile.php?id='.$comments[$i]['fromid'].'">'.$username.'</a></cite>
+						<cite class="fbc_rc_comment-author">'.$username.'</cite>
 						<abbr class="fbc_rc_date" title="'.date('r',$comments[$i]['time']).'">'.date('d M Y',$comments[$i]['time']).'</abbr>
 					</div>
 					<img alt="" src="'.$imgurl.'" class="avatar" height="50" width="50" '.$imgclass.' />
