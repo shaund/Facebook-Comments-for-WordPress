@@ -14,18 +14,26 @@
 	}
 
 	global $fbc_options;
+	$count = get_option("fbComments_commentCount_{$_POST['xid']}");
 
 	// Check if we want to update the comment count or send a notification email
 	switch ($_POST['fn']) {
 		// Update Facebook comment count
     	case "addComment":
+            // no break on purpose
+        case "removeComment":
+            if ($_POST['fn']=='addComment') {
+                $newCount = $count+1;
+            } else {
+                $newCount = $count-1;
+            }
+
     		fbComments_log('In ' . basename(__FILE__) . " with fn={$_POST['fn']}, xid={$_POST['xid']}");
-    		$count = get_option("fbComments_commentCount_{$_POST['xid']}");
-    	    if (update_option("fbComments_commentCount_{$_POST['xid']}", $count+1)) {
+    	    if (update_option("fbComments_commentCount_{$_POST['xid']}", $newCount)) {
     	    	fbComments_log(sprintf('    Updated Facebook comment count from %d to %d', $count, $count+1));
     	    	echo 'true';
     	    } else {
-    	    	fbComments_log(sprintf('    FAILED to update Facebook comment count from %d to %d', $count, $count+1));
+    	    	fbComments_log(sprintf('    FAILED to update Facebook comment count from %d to %d', $count, $newCount));
     	    	echo 'false';
     	    }
 

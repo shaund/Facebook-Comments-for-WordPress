@@ -27,8 +27,8 @@ function fbComments_getProperCommentCount($fbCommentCount=0, $wpCommentCount=0) 
 		return $fbCommentCount;
 	# If commenting is closed on this post or we shouldn't be displaying Facebook comments due to settings, just return the WordPress comments count
 	} elseif (!comments_open() ||
-			  ($fbc_options['displayPagesOrPosts'] == 'pages') && (!is_page()) ||
-			  ($fbc_options['displayPagesOrPosts'] == 'posts') && (!is_single())) {
+			  ($fbc_options['displayPagesOrPosts'] == 'pages') && (is_single()) ||
+			  ($fbc_options['displayPagesOrPosts'] == 'posts') && (is_page())) {
 	  return $wpCommentCount;
 	} else {
 		fbComments_log(sprintf('    Returning a combined comment count of %d', $fbCommentCount+$wpCommentCount));
