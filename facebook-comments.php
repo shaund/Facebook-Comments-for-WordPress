@@ -33,6 +33,7 @@
 	require_once 'facebook-comments-display.php';
 	require_once 'scripts/facebook.php'; # Facebook API wrapper
 	wp_enqueue_script('jquery');
+    wp_enqueue_script('comment_counts', plugins_url('webpage/_scripts/comment_counts.js', __FILE__), array('jquery'));
 
 	/**********************************
 	 Globals
